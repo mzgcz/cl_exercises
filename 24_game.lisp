@@ -21,7 +21,7 @@
 
 ;;; 启动
 (defun start-24-game ()
-  ;; 选取四个1~9的随机数
+  ;; 生成四个1～9的随机数
   (format t "Task: Use Four Number ~S To Get 24" (get-nums 4))
   (if (judge-24)
       (format t "Well Done!")
