@@ -60,8 +60,7 @@
 
 ;;; game start
 (defun game-start ()
-  ;; 获取四个1～9的随机数
-  (let ((4-num-list (get-n-num 4)))
+  (let ((4-num-list (get-n-num 4)))     ;获取4个1～9的随机数
     (format t "Task: Use Four Number ~S To Get 24" 4-num-list)
     (mapcar (lambda (op-list)
               (mapcar (lambda (num-list)
@@ -69,7 +68,7 @@
                                   (when (= 24 (eval-equation equation-1))
                                     (format t "~&There Is A Slove: ~S" equation-1)
                                     (return-from game-start)))
-                                (get-equation op-list num-list)))
-                      (get-num-list 4-num-list)))
-            (get-op-list 3)))
+                                (get-equation op-list num-list))) ;生成算符和数字的所有组合
+                      (get-num-list 4-num-list))) ;生成数字列表
+            (get-op-list 3)))           ;生成算符列表
   (format t "~&There Is No Slove"))
