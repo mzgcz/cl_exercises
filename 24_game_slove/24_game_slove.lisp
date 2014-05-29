@@ -40,6 +40,24 @@
                                       ops))
                             (get-op-list (1- n))))))
 
+;;; 由运算符列表和数字列表，确定组合式
+(defun get-equation (op-list num-list)
+  (let ((op-1 (car op-list))
+        (num-1 (car num-list)))
+    (if (= 1 (length op-list))
+        (list (cons op-1 num-list)
+              (cons op-1 (reverse num-list)))
+        (alexandria:mappend (lambda (equation-1)
+                              (list (list op-1 num-1 equation-1)
+                                    (list op-1 equation-1 num-1)))
+                            (get-equation (cdr op-list) (cdr num-list))))))
+
+;;; 执行算术表达式
+;;; 若存在除0错误，则返回最大fixnum
+(defun eval-equation (equation)
+  (handler-case (eval equation)
+    (division-by-zero () most-positive-fixnum)))
+
 ;;; game start
 (defun game-start ()
   ;; 获取四个1～9的随机数
@@ -47,18 +65,11 @@
     (format t "Task: Use Four Number ~S To Get 24" 4-num-list)
     (mapcar (lambda (op-list)
               (mapcar (lambda (num-list)
-                        (let ((op `(,(caddr op-list)
-                                     (,(cadr op-list)
-                                       (,(car op-list)
-                                         ,(nth 0 num-list)
-                                         ,(nth 1 num-list))
-                                       ,(nth 2 num-list))
-                                     ,(nth 3 num-list))))
-                          ;; 判断操作结果是否为24
-                          (if (= 24 (eval op))
-                              (progn
-                                (format t "~&There Is A Slove: ~S" op)
-                                (return-from game-start)))))
+                        (mapcar (lambda (equation-1)
+                                  (when (= 24 (eval-equation equation-1))
+                                    (format t "~&There Is A Slove: ~S" equation-1)
+                                    (return-from game-start)))
+                                (get-equation op-list num-list)))
                       (get-num-list 4-num-list)))
             (get-op-list 3)))
   (format t "~&There Is No Slove"))
