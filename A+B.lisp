@@ -1,3 +1,5 @@
+;;; http://rosettacode.org/wiki/A%2BB
+
 (defun A+B ()
   (format t "Please Input Two Numbers: ")
   (let ((A (read))
